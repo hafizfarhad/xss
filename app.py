@@ -1,83 +1,55 @@
 from flask import Flask, render_template, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
+from supabase import create_client, Client
 import joblib
 import os
+from dotenv import load_dotenv
 
-# Initialize the Flask app
+# Load environment variables
+load_dotenv()
+
+# Supabase setup
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# Initialize Flask app
 app = Flask(__name__)
 
-# Database configuration
-# For Vercel, SQLite database will not persist after the serverless function terminates.
-# You can consider using a cloud database (e.g., PostgreSQL, MySQL, or others).
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///xss_data.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-# Database model for storing inputs and outputs
-class XSSRecord(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    input_text = db.Column(db.String(500), nullable=False)
-    prediction = db.Column(db.String(50), nullable=False)
-
-# Create the database (only needs to be run once)
-with app.app_context():
-    db.create_all()
-
-# Load the trained model and vectorizer (make sure these files are deployed with the app)
-model = joblib.load('xss_classifier.pkl')  
+# Load models
+model = joblib.load('xss_classifier.pkl')
 vectorizer = joblib.load('tfidf_vectorizer.pkl')
 
-# Home route to display the form
 @app.route('/')
 def home():
-    return render_template('index.html')  # This will render your HTML form
+    return render_template('index.html')
 
-# Route to handle prediction from form submission
 @app.route('/predict', methods=['POST'])
 def predict():
-    sentence = request.form['sentence']  # Get the sentence from the form
-    # Vectorize the input sentence
+    sentence = request.form['sentence']
     X_input = vectorizer.transform([sentence])
-    
-    # Predict using the loaded model
     prediction = model.predict(X_input)
     result = "XSS Threat" if prediction[0] == 1 else "Non-XSS"
-    
-    # Save the input and prediction to the database
-    new_record = XSSRecord(input_text=sentence, prediction=result)
-    db.session.add(new_record)
-    db.session.commit()
-    
-    # Return the result
+
+    # Save to Supabase
+    response = supabase.table("XSSRecord").insert({
+        "input_text": sentence,
+        "prediction": result
+    }).execute()
+
+    if response.status_code == 201:
+        print("Record added successfully!")
+
     return render_template('index.html', prediction=result)
 
-# API route to handle JSON requests (for testing)
-@app.route('/api/predict', methods=['POST'])
-def api_predict():
-    data = request.get_json()  # Get JSON input
-    sentence = data['sentence']
-    
-    # Vectorize the input
-    X_input = vectorizer.transform([sentence])
-    
-    # Make the prediction
-    prediction = model.predict(X_input)
-    result = "XSS Threat" if prediction[0] == 1 else "Non-XSS"
-    
-    # Save the input and prediction to the database
-    new_record = XSSRecord(input_text=sentence, prediction=result)
-    db.session.add(new_record)
-    db.session.commit()
-    
-    # Return JSON response
-    return jsonify({'prediction': result})
-
-# New route to display records
 @app.route('/records')
 def records():
-    all_records = XSSRecord.query.all()  # Fetch all records from the database
+    response = supabase.table("XSSRecord").select("*").execute()
+    if response.status_code == 200:
+        all_records = response.data
+    else:
+        all_records = []
+    
     return render_template('records.html', records=all_records)
 
-# Run the Flask app only if we're not deploying to Vercel or another platform
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5000)
