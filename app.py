@@ -2,12 +2,15 @@ from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
+import os
 
 # Initialize the Flask app
 app = Flask(__name__)
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///xss_data.db'
+# For Vercel, SQLite database will not persist after the serverless function terminates.
+# You can consider using a cloud database (e.g., PostgreSQL, MySQL, or others).
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///xss_data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -21,10 +24,9 @@ class XSSRecord(db.Model):
 with app.app_context():
     db.create_all()
 
-# Load the trained model and vectorizer
+# Load the trained model and vectorizer (make sure these files are deployed with the app)
 model = joblib.load('xss_classifier.pkl')  
-# Replace with your actual model path
-vectorizer = joblib.load('tfidf_vectorizer.pkl')  # Load the saved vectorizer
+vectorizer = joblib.load('tfidf_vectorizer.pkl')
 
 # Home route to display the form
 @app.route('/')
@@ -77,6 +79,6 @@ def records():
     all_records = XSSRecord.query.all()  # Fetch all records from the database
     return render_template('records.html', records=all_records)
 
-# Run the Flask app
+# Run the Flask app only if we're not deploying to Vercel or another platform
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
