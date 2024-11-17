@@ -3,8 +3,11 @@
     "builds": [
       {
         "src": "Dockerfile",
-        "use": "@vercel/static-build"
+        "use": "@vercel/docker"
       }
-    ]
+    ],
+    "env": {
+      "DOCKER_BUILDKIT": "1"
+    }
   }
   
