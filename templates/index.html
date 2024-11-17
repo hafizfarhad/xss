@@ -10,12 +10,18 @@
     <div class="container">
         <h1>XSS Threat Detection</h1>
         <form action="/predict" method="POST">
-            <textarea name="sentence" placeholder="Enter your script for XSS detection..."></textarea><br>
+            <textarea name="sentence" placeholder="Enter your script for XSS detection..." required></textarea><br>
             <input type="submit" value="Check for XSS">
         </form>
         {% if prediction %}
             <h2>Prediction: {{ prediction }}</h2>
         {% endif %}
+        <!-- Add the History button -->
+        <a href="/records" class="button">History</a>
     </div>
+    <!-- Footer -->
+    <footer>
+        <p>Created by Hafiz Farhad</p>
+    </footer>
 </body>
 </html>

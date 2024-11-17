@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XSS Detection Records</title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
         <h1>XSS Detection Records</h1>
+        <br>
+        <!-- Add a button to navigate back to the home page -->
+        <button onclick="window.location.href='/'">Back to Home</button>
         <table>
             <thead>
                 <tr>
@@ -27,6 +30,10 @@
                 {% endfor %}
             </tbody>
         </table>
-    </div>
+        </div>
+    <!-- Footer -->
+    <footer>
+        <p>Created by Hafiz Farhad</p>
+    </footer>
 </body>
 </html>
