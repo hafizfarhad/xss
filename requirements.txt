@@ -4,3 +4,4 @@ joblib==1.4.2
 SQLAlchemy==2.0.36
 requests==2.32.3
 psutil==6.1.0
+supabase==2.10.0
