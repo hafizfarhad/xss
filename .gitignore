@@ -4,4 +4,5 @@ __pycache__/
 instance/
 venv/
 .vercel
-.re.txt
+re.txt
+gunicorn
