@@ -3,14 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - XSS Detector</title>
+    <title>About - XSS Threat Detection (Using AI)</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>About XSS Detector</h1>
-        <p>This tool detects potential XSS vulnerabilities in user input scripts.</p>
-        <p>Developed by Hafiz Farhad as a part of his cybersecurity journey.</p>
+        <h1>About</h1>
+        <p>
+            Our model, <strong>XSS Threat Detection (Using AI)</strong>, is designed to identify whether a given script 
+            has the potential to exploit a vulnerability known as 
+            <strong>Cross-Site Scripting (XSS)</strong>.
+        </p>
+        
+        <h2>What is XSS?</h2>
+        <p>
+            Cross-Site Scripting is a type of attack where malicious scripts are injected into 
+            trusted websites. These scripts can steal sensitive information, manipulate web content, 
+            or even take control of a user’s session.
+        </p>
+        
+        <h2>Example Scenario</h2>
+        <p><strong>1. Normal Input:</strong> A user submits their name in a form:</p>
+        <pre>
+    <code>John Doe</code>
+        </pre>
+        <p>The website safely displays:</p>
+        <pre>
+    <code>Welcome, John Doe!</code>
+        </pre>
+        
+        <p><strong>2. Malicious Input:</strong> An attacker submits a script instead of their name:</p>
+        <pre>
+    <code>&lt;script&gt;alert('XSS Attack!');&lt;/script&gt;</code>
+        </pre>
+        <p>
+            If the website is not secure, it will execute the script, displaying an alert box with the message 
+            "XSS Attack!".
+        </p>
+        
+        <h2>How our model helps?</h2>
+        <p>
+            Our model scans inputs like the one above and predicts if they are:
+        </p>
+        <p><strong>Safe:</strong> <br> </p>
+        <pre><code>Hello, world!</code></pre>
+        <p>Prediction: <strong>Not XSS</strong></p>
+        <p><strong>Potentially Malicious:</strong></p>
+        <pre><code>&lt;img src="x" onerror="alert('XSS!')"&gt;</code></pre>
+        <p>Prediction: <strong>Potential XSS</strong></p>
         <a href="/" class="button">Home</a>
         <a href="/predict" class="button">Start Detection</a>
     </div>

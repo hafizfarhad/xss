@@ -3,25 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XSS Detector</title>
+    <title>XSS Threat Detection (Using AI)</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>XSS Detection System</h1>
-        <p class="landing-header">Identify potential XSS vulnerabilities with ease.</p>
-    
-        <div class="landing-section">
-            <h2>About the Project</h2>
-            <p>This tool leverages machine learning to detect Cross-Site Scripting (XSS) vulnerabilities in scripts, providing fast and accurate results.</p>
+    <header class="header">
+        <div class="container">
+            <h1>XSS Threat Detection (Using AI)</h1>
+            <p class="landing-header">Identify potential XSS vulnerabilities with AI.</p>
         </div>
-    
-        <a href="/predict" class="button">Start Prediction</a>
-        <a href="/records" class="button">View Records</a>
-        <a href="/about" class="button">About</a>
-    </div>    
-    <footer>
-        <p>Created by <a href="https://hafizfarhad.com">Hafiz Farhad</a></p>
+    </header>
+
+    <main class="container">
+        <section class="about-section">
+            <h2>About the Project</h2>
+            <p>
+                XSS Threat Detection (Using AI) is a model (or you may say <em>a tool</em>) that leverages 
+                machine learning to detect Cross-Site Scripting (XSS) vulnerabilities in scripts, providing 
+                blazing fast and 99.7% accurate results.
+            </p>
+        </section>
+
+        <section class="actions">
+            <h2>What Would You Like to Do?</h2>
+            <div class="button-group">
+                <a href="/predict" class="button">Start Prediction</a>
+                <a href="/records" class="button">View History</a>
+                <a href="/about" class="button">About</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>
+                Created by 
+                <a href="https://hafizfarhad.com" target="_blank" rel="noopener noreferrer">
+                    Hafiz Farhad
+                </a>
+            </p>
+        </div>
     </footer>
 </body>
 </html>

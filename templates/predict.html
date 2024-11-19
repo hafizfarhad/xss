@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XSS Prediction</title>
+    <title>Prediction - XSS Threat Detection (Using AI)</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>XSS Prediction</h1>
+        <h1>Prediction</h1>
         <form action="/predict" method="POST">
             <textarea name="sentence" placeholder="Enter your script for XSS detection..." required></textarea><br>
             <input type="submit" value="Check for XSS">
