@@ -9,15 +9,19 @@
 <body>
     <div class="container">
         <h1>XSS Detection Records</h1>
+        <p>View a history of all the predictions made by users.</p>
         <br>
-        <!-- Add a button to navigate back to the home page -->
-        <button onclick="window.location.href='/'" class="button">Back to Home</button>
+        <!-- Navigation buttons -->
+            <a href="/" class="button">Home</a>
+            <a href="/predict" class="button">Make a Prediction</a>
+        <br>
+        <!-- Records Table -->
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Input Text</th>
-                    <th>Prediction</th>
+                    <th>Is XSS?</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,15 +29,15 @@
                 <tr>
                     <td>{{ record.id }}</td>
                     <td>{{ record.input_text }}</td>
-                    <td>{{ record.prediction }}</td>
+                    <td>{{ record.is_xss }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        </div>
+    </div>
     <!-- Footer -->
     <footer>
-        <p>Created by Hafiz Farhad</p>
+        <p>Created by <a href="https://hafizfarhad.com" target="_blank" rel="noopener noreferrer">Hafiz Farhad</a></p>
     </footer>
 </body>
 </html>

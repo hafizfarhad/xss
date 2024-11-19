@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
 from supabase import create_client, Client
 import joblib
 import os
@@ -20,46 +20,36 @@ model = joblib.load('xss_classifier.pkl')
 vectorizer = joblib.load('tfidf_vectorizer.pkl')
 
 @app.route('/')
-def home():
-    return render_template('index.html')
+def landing_page():
+    return render_template('index.html')  # Landing page
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['GET', 'POST'])
 def predict():
-    sentence = request.form['sentence']
-    X_input = vectorizer.transform([sentence])
-    prediction = model.predict(X_input)
-    result = "XSS Threat" if prediction[0] == 1 else "Non-XSS"
+    if request.method == 'POST':
+        sentence = request.form['sentence']
+        X_input = vectorizer.transform([sentence])
+        prediction = model.predict(X_input)
+        prediction_bool = bool(prediction[0])  # Convert to boolean (0 or 1)
+        result = "The given script is possibly a threat (XSS)" if prediction_bool else "The given script is safe (Non-XSS)"
 
-    # Save to Supabase
-    response = supabase.table("records").insert({
-        "input_text": sentence,
-        "prediction": result
-    }).execute()
+        # Save to Supabase with the new column name 'is_xss'
+        response = supabase.table("records").insert({
+            "input_text": sentence,
+            "is_xss": prediction_bool
+        }).execute()
 
-    # Check response directly
-    if response.data:
-        print("Record added successfully!")
-    elif response.errors:
-        print(f"Error inserting record: {response.errors}")
-    else:
-        print("Unexpected response:", response)
+        return render_template('predict.html', prediction=result)
 
-    return render_template('index.html', prediction=result)
-    
+    return render_template('predict.html')  # Prediction page (GET)
+
+@app.route('/about')
+def about():
+    return render_template('about.html')  # About page
+
 @app.route('/records')
 def records():
     response = supabase.table("records").select("*").execute()
-
-    # Check response directly
-    if response.data:  # Data exists, meaning the query was successful
-        all_records = response.data
-    elif response.errors:  # Check if there are errors
-        print(f"Error fetching records: {response.errors}")
-        all_records = []
-    else:  # Unexpected response
-        print("Unexpected response:", response)
-        all_records = []
-
+    all_records = response.data if response.data else []
     return render_template('records.html', records=all_records)
 
 if __name__ == '__main__':

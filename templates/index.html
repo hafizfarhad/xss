@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XSS Threat Detection</title>
+    <title>XSS Detector</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>XSS Threat Detection</h1>
-        <form action="/predict" method="POST">
-            <textarea name="sentence" placeholder="Enter your script for XSS detection..." required></textarea><br>
-            <input type="submit" value="Check for XSS">
-        </form>
-        {% if prediction %}
-            <h2>Prediction: {{ prediction }}</h2>
-        {% endif %}
-        <!-- Add the History button -->
-        <a href="/records" class="button">History</a>
-    </div>
-    <!-- Footer -->
+        <h1>XSS Detection System</h1>
+        <p class="landing-header">Identify potential XSS vulnerabilities with ease.</p>
+    
+        <div class="landing-section">
+            <h2>About the Project</h2>
+            <p>This tool leverages machine learning to detect Cross-Site Scripting (XSS) vulnerabilities in scripts, providing fast and accurate results.</p>
+        </div>
+    
+        <a href="/predict" class="button">Start Prediction</a>
+        <a href="/records" class="button">View Records</a>
+        <a href="/about" class="button">About</a>
+    </div>    
     <footer>
-        <p>Created by Hafiz Farhad</p>
+        <p>Created by <a href="https://hafizfarhad.com">Hafiz Farhad</a></p>
     </footer>
 </body>
 </html>
